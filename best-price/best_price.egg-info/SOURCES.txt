@@ -1,0 +1,6 @@
+setup.py
+best_price.egg-info/PKG-INFO
+best_price.egg-info/SOURCES.txt
+best_price.egg-info/dependency_links.txt
+best_price.egg-info/requires.txt
+best_price.egg-info/top_level.txt
