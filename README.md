@@ -20,7 +20,7 @@ While not at the GOAL_STATE:
     go to it
 ```
 
-# shortest path strategies
+#### shortest path strategies
 
 - Random 
 
