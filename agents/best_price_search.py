@@ -1,15 +1,37 @@
 import gymnasium as gym
 import best_price 
-from Queue import PriorityQueue
+from queue import PriorityQueue
+import enum
+
+class stateIndex(enum.IntEnum):
+    POSITION = 0
+    BAG = 1
+    STORES = 2
+    SHOPPINGLIST = 3
+    PRICES = 4
 
 class Node():
     def __init__(self, state, parent, action, f, g):
-        self._state = state
+        self._state = self.encode(state,parent)
+        # print(self._state)
         self._parent = parent
         self._depth = self.getParentDepth(parent) + 1
         self._action = action 
         self._f = f #node cost -> f = g + h  
         self._g = g #total weights path from start node
+
+    def encode(self,state,parent):
+        if parent:
+            return state
+        position = tuple([state["position"]])
+        bag = tuple([tuple(state["bag"])])
+        stores = tuple([tuple(state["stores"])])
+        # grid = state["grid"]
+        shoppinglist = tuple([tuple(state["shoppinglist"])])
+        prices = tuple([tuple(map(tuple,state["prices"]))])
+        return(position + bag + stores + shoppinglist +prices)
+        
+
 
     def getParentDepth(self, parent):
         if parent:
@@ -21,7 +43,13 @@ class Node():
         return self._depth
 
     def goalState(self):
-        return #TRUE OR FALSE 
+        for item in self._state[stateIndex.BAG]:
+            if item == 0:
+                return False
+        return self._state[stateIndex.POSITION] == 0
+    
+    def pathGoal(self,goal):
+        return self._state[stateIndex.POSITION] == goal
 
     def setF(self, f):
         self._f = f
@@ -48,28 +76,31 @@ class Node():
 ################################################################################
 
 class BestPriceSearch():
-    def __init__(self, play_times, human,n,s):
+    def __init__(self, play_times, human):#,n,s):
         self._playTimes = play_times
         self._adverageScore = 0
         self._env = self.create(human)
 
-    def create(self, human,n,s):
+    def create(self, human):#,n,s):
           # return gym.make("MiniGrid-MultiRoom-N6-S6-v0", render_mode = "human",)
         if human:
             return gym.make("best_price/BestPrice-v0", render_mode = "human",)
         else:
             return gym.make("best_price/BestPrice-v0",)
 
-    def episode(self, actionsFunc, resultFunc, backup):
+    def episode(self, actionsFunc, resultFunc):
         for i in range(self._playTimes):
             observation , info = self._env.reset()
+            state = best_price.BestPriceState()
+            state.observation = observation
+            print(state)
             totalReward = 0
-            self._adverageScore += self.run(observation, totalReward, actionsFunc, resultFunc, backup)
+            self._adverageScore += self.run(observation, totalReward, actionsFunc, resultFunc)
         self._adverageScore = self._adverageScore / self._playTimes
         self._env.close()
 
                 
-    def run(self, observation, totalReward, actionsFunc, resultFunc, backup):
+    def run(self, observation, totalReward, actionsFunc, resultFunc):
         g = 0
         f = 0
         prev = None
@@ -77,7 +108,7 @@ class BestPriceSearch():
 
         node = Node(observation, prev, action, f, g)
 
-        s = self.aStar(node,getf,actionsFunc, resultFunc)
+        s = self.wrapper(node,actionsFunc, resultFunc)
         if not s:
             print("NO RESULT FOUND")
             return 0 
@@ -96,82 +127,101 @@ class BestPriceSearch():
     def printScore(self):
         print("Adverage Score:",self._adverageScore)
 
-    def findGoalLocation(self, obs):
-        for y in range(obs.shape[1]):
-            for x in range(obs.shape[0]):
-                index,color,state = obs[x][y]
-                obj = constants.IDX_TO_OBJECT[index] 
-                colour = constants.IDX_TO_COLOR[color]
-                if obj == "goal":
-                    return x,y
-        print("ERROR COULDNT FIND goal")
+    def findPath(self, node):
+        path = []
+        if not node:
+            print("ERR finding path. node == None")
+            return path
+        while node._parent != None:
+            path.append(node._action)
+            node =node._parent
+        return path
 
-    def findAgentLocation(self,obs):
-        for y in range(obs.shape[1]):
-            for x in range(obs.shape[0]):
-                index,color,state = obs[x][y]
-                obj = constants.IDX_TO_OBJECT[index] 
-                colour = constants.IDX_TO_COLOR[color]
-                if obj == "agent":
-                    return x,y
-        print("ERROR COULDNT FIND agent")
-    
-    def findDoors(self, obs):
-        doors = []
-        for y in range(obs.shape[1]):
-            for x in range(obs.shape[0]):
-                index,color,state = obs[x][y]
-                obj = constants.IDX_TO_OBJECT[index] 
-                colour = constants.IDX_TO_COLOR[color]
-                if obj == "door":
-                    doors.append((x,y,state))
-        if len(doors)== 0:
-            print("ERROR COULDNT FIND a door")
-        return doors
+#checks the bag if the item is still needed
+    def stillNeed(self,node, product):
+        if node._state[stateIndex.BAG][product] > 0:
+            return False
+        return True
 
-    def findWalls(self,obs):
-        walls = []
-        for y in range(obs.shape[1]):
-            for x in range(obs.shape[0]):
-                index, color, state = obs[x][y]
-                obj = constants.IDX_TO_OBJECT[index]
-                if obj == "wall":
-                    walls.append((x,y))
-        if len(walls) == 0:
-            print("ERROR COULDNT FIND a wall")
-        return walls
-                    
+    #best deal with the cheapest item
+    def findBestDeal(self, prices,cheapest_items):
+        if len(cheapest_items) == 0:
+            print("ERR: there is no cheap items")
+            return 
+        price = min(cheapest_items)
+        for store in range(len(prices)):
+            for product in range(len(prices[store])):
+                if prices[store][product] == price:
+                    return store, product 
+        print("ERR: there was no product for a price of",price)
+        return
 
-    def encode(self, state):
-        x, y = self.findAgentLocation(state["image"])
-        direction = state["image"][x][y][2]
-        doors = self.findDoors(state["image"])
-        return (x, y, direction) + tuple(doors)
+    def buy(self,dealItem,parent):
+        if not parent:
+            print("ERR node == None cannot Buy")
+            return
+        action = dealItem + 4
+        f = parent._f
+        g = parent._g
+        child = Node(parent._state,parent, action, f, g)
+        # child.calculateG(action,parent,parent._state)
+        # child.calculateF(parent._state,)
+        return child
+
+    def haveAllItems(self,node):
+        if not node:
+            print("ERR node == none dont know if you havve items")
+            return True
+        for item in node._state[stateIndex.BAG]:
+            if item <= 0:
+                return False
+        return True
 
 
+#runs my search strategy 
+    def wrapper(self, node,actionsFunc, resultFunc):
+        while not node.goalState():
+            prices = []
+            cheapest_items = []
+            for store in range(len(node._state[stateIndex.STORES])):
+                path_node = self.aStar(node,node._state[stateIndex.STORES][store],actionsFunc, resultFunc)
+                path = self.findPath(path_node)
+                input("pos"+str(node._state[stateIndex.POSITION])+" store:"+str(store)+str(path))
+                cost = len(path) #*gas which is 1 rn
+                store_price = []
+                product = node._state[stateIndex.SHOPPINGLIST][0] 
+                cheapest = float("inf")
+                for item in range(len(node._state[stateIndex.PRICES][store])):
+                    # finds the cheapest item needed
+                    if float(cheapest) > float(node._state[stateIndex.PRICES][store][item]+cost) and self.stillNeed(node,product):
+                        cheapest = int(node._state[stateIndex.PRICES][store][item]+cost)
+                    product = node._state[stateIndex.SHOPPINGLIST][item] 
+                    store_price.append(node._state[stateIndex.PRICES][store][item]+cost)
+                cheapest_items.append(cheapest)
+                prices.append(store_price)
+            dealStore, dealItem = self.findBestDeal(prices, cheapest_items)
+            node = self.aStar(node, node._state[stateIndex.STORES][dealStore], actionsFunc, resultFunc)
+            node = self.buy(dealItem,node)
+            if self.haveAllItems(node):
+                home= 0 
+                node= self.aStar(node,home,actionsFunc, resultFunc)
+        return node
 
-    def aStar(self, node, getNodef, actionsFunc, resultFunc, backup):
-        # state = self.encode(node._state)
-        walls = self.findWalls(node._state["image"])
-        goal = self.findGoalLocation(node._state["image"])
-        node._state = self.encode(node._state)
+
+    def aStar(self, node, goal, actionsFunc, resultFunc ):
         node.calculateF(node._state,goal) #just to be safe
         reached = {}
-        if backup:
-            Q = PriorityQueueBackup()
-        else:
-            Q = PriorityQueue(getNodef)
-        Q.push(node)
+        Q = PriorityQueue()
+        Q.put(node)
         reached[node._state] = node
-        while (not backup and Q.length() > 0) or (backup and not Q.empty()):
-            # print(Q.length())
-            s = Q.pop()
-            if s.goalState(goal):
+        while not Q.empty():
+            s = Q.get()
+            if s.pathGoal(goal):
                 return s 
-            for a in actionsFunc(s,walls,goal):
+            for a in actionsFunc(s,goal):
                 S = resultFunc(s,a,goal)
                 if (S._state not in reached) or (S._g < reached[S._state]._g):
-                    Q.push(S)
+                    Q.put(S)
                     reached[S._state] = S
 
 
