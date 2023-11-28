@@ -40,7 +40,7 @@ The defaults is as follows:
 
 Actions go as follows:  
 
-    **movement actions**:  
+**movement actions**:  
     
     up = 0  
     
@@ -50,7 +50,7 @@ Actions go as follows:
     
     right = 3  
     
-    **buy actions**:  
+**buy actions**:  
     
     buy apple = 4  
     
