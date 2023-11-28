@@ -11,13 +11,13 @@ The enviorment is a area rectangle *X width and Y height* also it has *N stores*
     with range of *1 to 100 $* per each item they sale that is on your *shopping list*.
     Each step cost is the *gas* price unless buying, which will be the cost of the item.
 
-<br \>The defaults is as follows:
-__width = 7
-__height = 5
-__stores = 4
-__gas = 1
-__shopping list = [ apples, oranges, bannanas ] 
-__starting place will always be the same top left corner = 0
+The defaults is as follows:
+- width = 7
+- height = 5
+- stores = 4
+- gas = 1
+- shopping list = [ apples, oranges, bannanas ]
+- starting place will always be the same top left corner = 0
 
     __**Observability** Fully observable. All information is given.
     __**Uncertanty** Deterministic, all things are given to you, though the stores go to random places each restart
