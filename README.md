@@ -1,13 +1,13 @@
 ## PEAS ASSESSMENT
 
-> Performance
-    __The performance measure of this project, would be cost effective. Finding the 
+> Performance: 
+    The performance measure of this project, would be cost effective. Finding the 
     optimal path that has the least amount of cost is the goal. To be more specific
     to get every item that is on the *shopping list* into the *bag* and return to
     start positon with each step costing *gas* money.
 
-> Enviorment
-The enviorment is a area rectangle *X width and Y height* also it has *N stores*
+> Enviorment: 
+    The enviorment is a area rectangle *X width and Y height* also it has *N stores*
     with range of *1 to 100 $* per each item they sale that is on your *shopping list*.
     Each step cost is the *gas* price unless buying, which will be the cost of the item.
 
