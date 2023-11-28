@@ -68,7 +68,7 @@ While not at the GOAL_STATE:
         For each item in each store:
             add path cost to each item
             find cheapest item that you dont have
-    go to it
+    go to it and buy it
 ```
 
 #### shortest path strategies
