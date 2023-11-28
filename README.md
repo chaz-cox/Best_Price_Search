@@ -38,7 +38,7 @@ The defaults is as follows:
     The actuators are all about moving the player, and buying the items to put in
     the bag.
 
-    Actions go as follows:
+Actions go as follows:
     **movement actions**:
     up = 0
     down = 1
