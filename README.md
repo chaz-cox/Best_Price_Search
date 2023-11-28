@@ -1,31 +1,31 @@
 ## PEAS ASSESSMENT
 
 > Performance
-    >The performance measure of this project, would be cost effective. Finding the 
+    __The performance measure of this project, would be cost effective. Finding the 
     optimal path that has the least amount of cost is the goal. To be more specific
     to get every item that is on the *shopping list* into the *bag* and return to
     start positon with each step costing *gas* money.
 
 > Enviorment
-    >The enviorment is a area rectangle *X width and Y height* also it has *N stores*
+    __The enviorment is a area rectangle *X width and Y height* also it has *N stores*
     with range of *1 to 100 $* per each item they sale that is on your *shopping list*.
     Each step cost is the *gas* price unless buying, which will be the cost of the item.
 
-The defaults is as follows:
-width = 7
-height = 5
-stores = 4
-gas = 1
-    shopping list = [ apples, oranges, bannanas ] 
-    starting place will always be the same top left corner = 0
+__The defaults is as follows:
+__width = 7
+__height = 5
+__stores = 4
+__gas = 1
+__shopping list = [ apples, oranges, bannanas ] 
+__starting place will always be the same top left corner = 0
 
-    **Observability** Fully observable. All information is given.
-    **Uncertanty** Deterministic, all things are given to you, though the stores go to random places each restart
-    **Duration** Sequential, best strategies come from optimal search algorythmns
-    **Stability** Static, nothing moves until finished.
-    **Grandularity** Discreet. All values are given.
-    **Particpants** Single agent will be the only player.
-    **Knowledge** Known, all nessary physics are known.
+    __**Observability** Fully observable. All information is given.
+    __**Uncertanty** Deterministic, all things are given to you, though the stores go to random places each restart
+    __**Duration** Sequential, best strategies come from optimal search algorythmns
+    __**Stability** Static, nothing moves until finished.
+    __**Grandularity** Discreet. All values are given.
+    __**Particpants** Single agent will be the only player.
+    __**Knowledge** Known, all nessary physics are known.
 
 > Actuators
     The actuators are all about moving the player, and buying the items to put in
