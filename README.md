@@ -38,16 +38,26 @@ The defaults is as follows:
     The actuators are all about moving the player, and buying the items to put in
     the bag.
 
-Actions go as follows:
-    **movement actions**:
-    up = 0
-    down = 1
-    left = 2
-    right = 3
-    **buy actions**:
-    buy apple = 4
-    buy orange = 5
-    buy bannana = 6
+Actions go as follows:  
+
+    **movement actions**:  
+    
+    up = 0  
+    
+    down = 1  
+    
+    left = 2  
+    
+    right = 3  
+    
+    **buy actions**:  
+    
+    buy apple = 4  
+    
+    buy orange = 5  
+    
+    buy bannana = 6  
+    
 
 > Sensors: 
     The locations of each store, the positon of the player, 
