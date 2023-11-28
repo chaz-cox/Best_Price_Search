@@ -19,13 +19,20 @@ The defaults is as follows:
 - shopping list = [ apples, oranges, bannanas ]
 - starting place will always be the same top left corner = 0
 
-    __**Observability** Fully observable. All information is given.
-    __**Uncertanty** Deterministic, all things are given to you, though the stores go to random places each restart
-    __**Duration** Sequential, best strategies come from optimal search algorythmns
-    __**Stability** Static, nothing moves until finished.
-    __**Grandularity** Discreet. All values are given.
-    __**Particpants** Single agent will be the only player.
-    __**Knowledge** Known, all nessary physics are known.
+    **Observability** Fully observable. All information is given.
+  
+    **Uncertanty** Deterministic, all things are given to you, though the stores go to random places each restart
+  
+    **Duration** Sequential, best strategies come from optimal search algorythmns
+  
+    **Stability** Static, nothing moves until finished.
+  
+    **Grandularity** Discreet. All values are given.
+  
+    **Particpants** Single agent will be the only player.
+  
+    **Knowledge** Known, all nessary physics are known.
+  
 
 > Actuators
     The actuators are all about moving the player, and buying the items to put in
