@@ -42,21 +42,16 @@ Actions go as follows:
 
 **movement actions**:  
     
-    up = 0  
-    
-    down = 1  
-    
-    left = 2  
-    
-    right = 3  
+- up = 0
+- down = 1
+- left = 2
+- right = 3  
     
 **buy actions**:  
     
-    buy apple = 4  
-    
-    buy orange = 5  
-    
-    buy bannana = 6  
+- buy apple = 4
+- buy orange = 5
+- buy bannana = 6  
     
 
 > Sensors: 
