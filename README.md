@@ -7,11 +7,11 @@
     start positon with each step costing *gas* money.
 
 > Enviorment
-    __The enviorment is a area rectangle *X width and Y height* also it has *N stores*
+    <br \>The enviorment is a area rectangle *X width and Y height* also it has *N stores*
     with range of *1 to 100 $* per each item they sale that is on your *shopping list*.
     Each step cost is the *gas* price unless buying, which will be the cost of the item.
 
-__The defaults is as follows:
+<br \>The defaults is as follows:
 __width = 7
 __height = 5
 __stores = 4
