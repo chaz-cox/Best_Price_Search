@@ -34,7 +34,7 @@ The defaults is as follows:
     **Knowledge** Known, all nessary physics are known.
   
 
-> Actuators
+> Actuators: 
     The actuators are all about moving the player, and buying the items to put in
     the bag.
 
@@ -49,7 +49,7 @@ The defaults is as follows:
     buy orange = 5
     buy bannana = 6
 
-> Sensors
+> Sensors: 
     The locations of each store, the positon of the player, 
     bag / objects holding, shopping list / things needed, 
     and the prices of each item at each store.
