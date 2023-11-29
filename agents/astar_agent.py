@@ -20,7 +20,7 @@ class ActionIndex(enum.IntEnum):
 
 def get_index(x, y, width,height):
     if x >=width or x < 0 or y >= height or y < 0:
-        print("ERR: INVALID POSITION",x,y)
+        # print("ERR: INVALID POSITION",x,y)
         #invalid coordinates return none
         return None
     return y*width+ x 

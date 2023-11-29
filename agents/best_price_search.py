@@ -4,6 +4,12 @@ from queue import PriorityQueue
 import enum
 import copy
 
+def get_coordinates(pos,width=7):
+    x = pos % width
+    y = pos // width
+    return x,y
+
+
 class stateIndex(enum.IntEnum):
     POSITION = 0
     BAG = 1
@@ -76,7 +82,9 @@ class Node():
 
     def getHeuristic(self, state, goal): #better state
         #calculate Manhattin distance once you get it working
-        return 0
+        state_x, state_y = get_coordinates(state[stateIndex.POSITION])
+        goal_x, goal_y = get_coordinates(goal)
+        return abs(state_x - goal_x) + abs(state_y - goal_y)
     
     def stepCost(self, a, node, state):#action,other_node,better state
         return 1 
@@ -228,10 +236,8 @@ class BestPriceSearch():
             if self.haveAllItems(node):
                 home= 0 
                 node= self.aStar(node,home,actionsFunc, resultFunc)
-                print(node._state[stateIndex.POSITION])
                 all_actions += self.findPath(node)
                 all_actions.append(2)#left
-                print("GOING HOME", all_actions)
                 return all_actions 
         return None
 
@@ -242,22 +248,14 @@ class BestPriceSearch():
         Q = PriorityQueue()
         Q.put(node)
         reached[node._state] = node
-        if goal == 0:
-            input("astaring")
         while not Q.empty():
             s = Q.get()
-            if goal == 1:
-                print(s._state[stateIndex.POSITION])
-                input("whiel")
             if s.pathGoal(goal):
-                if goal == 1:
-                    input("goal")
                 return s 
             for a in actionsFunc(s,goal):
                 S = resultFunc(s,a,goal)
                 if (S._state not in reached) or (S._g < reached[S._state]._g):
                     Q.put(S)
                     reached[S._state] = S
-        input("NOPE")
 
 
