@@ -125,13 +125,14 @@ class BestPriceSearch():
         state.observation = observation
         terminated = truncated = False
         while not (terminated or truncated):
-            action = actions.pop(0)
             print(state)
             print("action",action)
             input()
+            action = actions.pop(0)
             observation, reward, terminated, truncated, info = self._env.step(action)
             state.observation = observation
             totalReward += reward
+        print(state)
         return totalReward
 
     def printScore(self):
@@ -149,7 +150,7 @@ class BestPriceSearch():
 
 #checks the bag if the item is still needed
     def stillNeed(self,node, product):
-        print("still need",product)
+        # print("still need",product)
         if node._state[stateIndex.BAG][product] > 0:
             return False
         return True
@@ -229,6 +230,7 @@ class BestPriceSearch():
                 node= self.aStar(node,home,actionsFunc, resultFunc)
                 print(node._state[stateIndex.POSITION])
                 all_actions += self.findPath(node)
+                all_actions.append(2)#left
                 print("GOING HOME", all_actions)
                 return all_actions 
         return None
@@ -240,15 +242,22 @@ class BestPriceSearch():
         Q = PriorityQueue()
         Q.put(node)
         reached[node._state] = node
+        if goal == 0:
+            input("astaring")
         while not Q.empty():
             s = Q.get()
+            if goal == 1:
+                print(s._state[stateIndex.POSITION])
+                input("whiel")
             if s.pathGoal(goal):
+                if goal == 1:
+                    input("goal")
                 return s 
             for a in actionsFunc(s,goal):
                 S = resultFunc(s,a,goal)
                 if (S._state not in reached) or (S._g < reached[S._state]._g):
                     Q.put(S)
                     reached[S._state] = S
-
+        input("NOPE")
 
 

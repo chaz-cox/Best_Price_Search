@@ -18,56 +18,68 @@ class ActionIndex(enum.IntEnum):
     BUYORANGE = 5
     BUYBANNANA = 6
 
+def get_index(x, y, width,height):
+    if x >=width or x < 0 or y >= height or y < 0:
+        print("ERR: INVALID POSITION",x,y)
+        #invalid coordinates return none
+        return None
+    return y*width+ x 
+   
+def get_coordinates(pos,width):
+    x = pos % width
+    y = pos // width
+    return x,y
 
-def model_search_actions(node, goal):
+
+def model_search_actions(node, goal,width=7, height=5):
     # input("goal="+str(goal))
     actions = []
     direction = ActionIndex
-    state = best_price.BestPriceState()
+    # state = best_price.BestPriceState()
     pos = node._state[stateIndex.POSITION]
     # input("current pos="+str(pos))
-    x, y = state.get_coordinates(pos)
+    x, y = get_coordinates(pos, width)
 
-    if state.get_index(x,y+1):
+    if get_index(x,y+1,width,height) != None:
         actions.append(direction.DOWN)
-        if state.get_index(x,y+1) == goal:
+        if get_index(x,y+1,width, height) == goal:
             return [direction.DOWN]
-    if state.get_index(x,y-1):
+    if get_index(x,y-1,width,height) != None:
         actions.append(direction.UP)
-        if state.get_index(x,y-1) == goal:
+        if get_index(x,y-1,width, height) == goal:
             return [direction.UP]
-    if state.get_index(x+1,y):
+    if get_index(x+1,y,width, height) != None:
         actions.append(direction.RIGHT)
-        if state.get_index(x+1,y) == goal:
+        if get_index(x+1,y,width,height) == goal:
             return [direction.RIGHT]
-    if state.get_index(x-1,y):
+    if get_index(x-1,y,width,height) != None:
         actions.append(direction.LEFT)
-        if state.get_index(x-1,y) == goal:
+        if get_index(x-1,y,width, height) == goal:
             return [direction.LEFT]
     return actions
 
-    
 
-def model_search_result(node, action, goal):
+
+def model_search_result(node, action, goal, width=7, height=5):
     # input("action = "+str(action))
-    state = best_price.BestPriceState()
+    # state = best_price.BestPriceState()
     keepStuff = node._state[stateIndex.BAG:]
     direction = ActionIndex
     new_pos = node._state[stateIndex.POSITION] 
-    x, y = state.get_coordinates(new_pos)
+    x, y = get_coordinates(new_pos,width)
     if action == direction.UP:
         # input("action = up y-1")
-        new_pos = state.get_index(x,y-1)
+        new_pos = get_index(x,y-1, width, height)
     elif action == direction.DOWN:
         # print(state.get_index(x,y+1))
         # input("action = down y+1")
-        new_pos = state.get_index(x,y+1)
+        new_pos = get_index(x,y+1, width,height)
     elif action == direction.RIGHT:
         # input("action = right x+1")
-        new_pos = state.get_index(x+1,y)
+        new_pos = get_index(x+1,y, width, height)
     elif action == direction.LEFT:
         # input("action = left x-1")
-        new_pos = state.get_index(x-1,y)
+        new_pos = get_index(x-1,y, width, height)
     else:
         print("ERR: this action did not move position",action)
         return

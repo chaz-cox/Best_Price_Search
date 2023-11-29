@@ -143,31 +143,31 @@ class BestPriceState:
 
         if action == ActionIndex.UP:
             new_pos = self.get_index(x,y-1)
-            if new_pos:
+            if new_pos != None:
                 self._position = new_pos
             self._moneyspent += self._gasprice
 
         elif action == ActionIndex.DOWN:
             new_pos = self.get_index(x,y+1)
-            if new_pos:
+            if new_pos != None:
                 self._position = new_pos
             self._moneyspent += self._gasprice
 
         elif action == ActionIndex.LEFT:
             new_pos = self.get_index(x-1,y)
-            if new_pos:
+            if new_pos != None:
                 self._position = new_pos
             self._moneyspent += self._gasprice
 
         elif action == ActionIndex.RIGHT:
             new_pos = self.get_index(x+1,y)
-            if new_pos:
+            if new_pos != None:
                 self._position = new_pos
             self._moneyspent += self._gasprice
 
         elif action == ActionIndex.BUYAPPLE:
             store = self.find_store(self._position)
-            if store:
+            if store != None:
                 price = self._prices[store][Items.APPLES]
                 self._moneyspent += price
                 self._bag[Items.APPLES] += 1
@@ -176,7 +176,7 @@ class BestPriceState:
 
         elif action == ActionIndex.BUYORANGE:
             store = self.find_store(self._position)
-            if store:
+            if store != None:
                 price = self._prices[store][Items.ORANGES]
                 self._moneyspent += price
                 self._bag[Items.ORANGES] += 1
@@ -251,6 +251,7 @@ class BestPriceState:
  
     def get_index(self,x, y):
         if x >= self._width or x < 0 or y >= self._height or y < 0:
+            print("ERR: INVALID",x,y)
             #invalid coordinates return none
             return None
         return y*self._width+ x 
@@ -342,7 +343,7 @@ if __name__ == "__main__":
     print(state)
     state1 = BestPriceModel.RESULT(state, 1)
     print(state1)
-    state2 = BestPriceModel.RESULT(state1,1)
+    state2 = BestPriceModel.RESULT(state1,0)
     print(state2)
     state3 = BestPriceModel.RESULT(state2,3)
     print(state3)
