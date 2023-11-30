@@ -77,7 +77,7 @@ While not at the GOAL_STATE:
 
 - Astar
 
-<!-- - Iteritive Deepening -->
+- Iteritive Deepening
 
 <!-- - BFS -->
 
