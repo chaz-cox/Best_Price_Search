@@ -3,9 +3,9 @@
 import gymnasium as gym
 import best_price
 import random
-from best_price_search import BestPriceSearch, Node, stateIndex
+from best_price_search import BestPriceSearchIterative, Node, stateIndex
 import enum
-import time
+import time 
 # from best_price.envs import BestPriceModel 
 # from gym import envs
 # from queue import Queue, LifoQueue, PriorityQueue
@@ -92,19 +92,17 @@ def model_search_result(node, action, goal, width=7, height=5):
     g = node._g
 
     child = Node(new_state,parent,new_action,f,g)
-    child.calculateG(new_action, parent, new_state) 
-    child.calculateF(new_state, goal)
     return child
 
 def main():
     # rooms= 6 #2, 4
     # room_size = 6 #4, 5 
     time1 = time.time()
-    print_state = False 
-    grid = BestPriceSearch(1, False)#, rooms, room_size)
+    print_state = False
+    grid = BestPriceSearchIterative(1, False)#, rooms, room_size)
     grid.episode(model_search_actions, model_search_result, print_state)
     grid.printScore()
-    print("Time:", time.time() - time1)
+    print("Time:",time.time() - time1)
 
 
 if __name__ == "__main__":

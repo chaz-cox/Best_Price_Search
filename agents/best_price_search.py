@@ -1,6 +1,6 @@
 import gymnasium as gym
 import best_price 
-from queue import PriorityQueue
+from queue import PriorityQueue, LifoQueue
 import enum
 import copy
 
@@ -40,7 +40,7 @@ class Node():
         
 
 
-    def addToBag(self, item):
+    def addToBag(self, item): #sometimes there item is not what you expected, which leads to err
         # (9, (0, 0, 0), (30, 23, 20, 9), (0, 1, 2), ((24, 91, 24), (69, 58, 63), (25, 20, 93), (38, 11, 59)))
         bag = self._state[stateIndex.BAG]
         item_tuple = (bag[item]+1,) #increment
@@ -85,6 +85,7 @@ class Node():
         state_x, state_y = get_coordinates(state[stateIndex.POSITION])
         goal_x, goal_y = get_coordinates(goal)
         return abs(state_x - goal_x) + abs(state_y - goal_y)
+        # return 0 
     
     def stepCost(self, a, node, state):#action,other_node,better state
         return 1 
@@ -107,16 +108,16 @@ class BestPriceSearch():
         else:
             return gym.make("best_price/BestPrice-v0",)
 
-    def episode(self, actionsFunc, resultFunc):
+    def episode(self, actionsFunc, resultFunc, print_state):
         for i in range(self._playTimes):
             observation , info = self._env.reset()
             totalReward = 0
-            self._adverageScore += self.run(observation, totalReward, actionsFunc, resultFunc)
+            self._adverageScore += self.run(observation, totalReward, actionsFunc, resultFunc, print_state)
         self._adverageScore = self._adverageScore / self._playTimes
         self._env.close()
 
                 
-    def run(self, observation, totalReward, actionsFunc, resultFunc):
+    def run(self, observation, totalReward, actionsFunc, resultFunc, print_state):
         g = 0
         f = 0
         prev = None
@@ -133,14 +134,16 @@ class BestPriceSearch():
         state.observation = observation
         terminated = truncated = False
         while not (terminated or truncated):
-            print(state)
-            print("action",action)
-            input()
+            if print_state:# and action in [4,5,6]:
+                print(state)
+                print("action",action)
+                input()
             action = actions.pop(0)
             observation, reward, terminated, truncated, info = self._env.step(action)
             state.observation = observation
             totalReward += reward
-        print(state)
+        if print_state:
+            print(state)
         return totalReward
 
     def printScore(self):
@@ -164,7 +167,7 @@ class BestPriceSearch():
         return True
 
     #best deal with the cheapest item
-    def findBestDeal(self, prices,cheapest_items):
+    def findBestDeal(self, prices,cheapest_items):#cheapest_items isnt what it is suppose to be
         if len(cheapest_items) == 0:
             print("ERR: there is no cheap items")
             return 
@@ -237,7 +240,6 @@ class BestPriceSearch():
                 home= 0 
                 node= self.aStar(node,home,actionsFunc, resultFunc)
                 all_actions += self.findPath(node)
-                all_actions.append(2)#left
                 return all_actions 
         return None
 
@@ -258,4 +260,176 @@ class BestPriceSearch():
                     Q.put(S)
                     reached[S._state] = S
 
+#################################################################################
+class BestPriceSearchIterative():
+    def __init__(self, play_times, human):#,n,s):
+        self._playTimes = play_times
+        self._adverageScore = 0
+        self._env = self.create(human)
+
+    def create(self, human):#,n,s):
+          # return gym.make("MiniGrid-MultiRoom-N6-S6-v0", render_mode = "human",)
+        if human:
+            return gym.make("best_price/BestPrice-v0", render_mode = "human",)
+        else:
+            return gym.make("best_price/BestPrice-v0",)
+
+    def episode(self, actionsFunc, resultFunc, print_state):
+        for i in range(self._playTimes):
+            observation , info = self._env.reset()
+            totalReward = 0
+            self._adverageScore += self.run(observation, totalReward, actionsFunc, resultFunc,print_state)
+        self._adverageScore = self._adverageScore / self._playTimes
+        self._env.close()
+
+                
+    def run(self, observation, totalReward, actionsFunc, resultFunc, print_state):
+        g = 0
+        f = 0
+        prev = None
+        action = -1
+
+        node = Node(observation, prev, action, f, g, True)
+
+        actions = self.wrapper(node,actionsFunc, resultFunc)
+        if not actions:
+            print("NO RESULT FOUND")
+            return 0 
+
+        state = best_price.BestPriceState()
+        state.observation = observation
+        terminated = truncated = False
+        while not (terminated or truncated):
+            if print_state:
+                print(state)
+                print("action",action)
+                input()
+            action = actions.pop(0)
+            observation, reward, terminated, truncated, info = self._env.step(action)
+            state.observation = observation
+            totalReward += reward
+        if print_state:
+            print(state)
+        return totalReward
+
+    def printScore(self):
+        print("Adverage Score:",self._adverageScore)
+
+    def findPath(self, node):
+        path = []
+        if not node:
+            print("ERR finding path. node == None")
+            return path
+        while node._parent != None:
+            path.append(node._action)
+            node =node._parent
+        return path
+
+#checks the bag if the item is still needed
+    def stillNeed(self,node, product):
+        # print("still need",product)
+        if node._state[stateIndex.BAG][product] > 0:
+            return False
+        return True
+
+    #best deal with the cheapest item
+    def findBestDeal(self, prices,cheapest_items):
+        if len(cheapest_items) == 0:
+            print("ERR: there is no cheap items")
+            return 
+        price = min(cheapest_items)
+        for store in range(len(prices)):
+            for product in range(len(prices[store])):
+                if prices[store][product] == price:
+                    return store, product 
+        print("ERR: there was no product for a price of",price)
+        return
+
+    def buy(self,dealItem,parent):
+        if not parent:
+            print("ERR node == None cannot Buy")
+            return
+        action = dealItem + 4
+        f = parent._f
+        g = parent._g
+        child = Node(parent._state,parent, action, f, g)
+        # child.calculateG(action,parent,parent._state)
+        # child.calculateF(parent._state,)
+        child._state[stateIndex.BAG][dealItem]+=1
+        return child
+
+    def haveAllItems(self,node):
+        if not node:
+            print("ERR node == none dont know if you havve items")
+            return True
+        for item in node._state[stateIndex.BAG]:
+            if item <= 0:
+                return False
+        return True
+
+
+#runs my search strategy 
+    def wrapper(self, node,actionsFunc, resultFunc):
+        all_actions = []
+        while not node.goalState():
+            prices = []
+            cheapest_items = []
+            for store in range(len(node._state[stateIndex.STORES])):
+                path_node = self.Iterive(node,node._state[stateIndex.STORES][store],actionsFunc, resultFunc)
+                path = self.findPath(path_node)
+                # input("pos"+str(node._state[stateIndex.POSITION])+" store:"+str(store)+str(path))
+                cost = len(path) #*gas which is 1 rn
+                store_price = []
+                cheapest = float("inf")
+                for item in range(len(node._state[stateIndex.PRICES][store])):
+                    product = node._state[stateIndex.SHOPPINGLIST][item] 
+                    # finds the cheapest item needed
+                    if float(cheapest) > float(node._state[stateIndex.PRICES][store][item]+cost) and self.stillNeed(node,product): #this isnt right probably
+                        cheapest = int(node._state[stateIndex.PRICES][store][item]+cost)
+                    store_price.append(node._state[stateIndex.PRICES][store][item]+cost)
+                cheapest_items.append(cheapest)
+                prices.append(store_price)
+            # print(prices, cheapest_items)
+            dealStore, dealItem = self.findBestDeal(prices, cheapest_items)
+            # print("GOAL store",dealStore+1)
+            node = self.Iterive(node, node._state[stateIndex.STORES][dealStore], actionsFunc, resultFunc)
+            path_node = copy.deepcopy(node)
+            # print(self.findPath(path_node))
+            all_actions += self.findPath(path_node)
+            all_actions.append(dealItem+4) #buy item 
+            node.addToBag(dealItem)
+            # input("pos"+str(node._state[stateIndex.POSITION])+" store:"+str(store)+"actions"+str(all_actions)+"bag"+str(node._state[stateIndex.BAG]))
+            new_state = node._state
+            node = Node(new_state,None,-1,0,0) #kill node parent
+            # node = self.buy(dealItem,node)
+            if self.haveAllItems(node):
+                home= 0 
+                node= self.Iterive(node,home,actionsFunc, resultFunc)
+                all_actions += self.findPath(node)
+                return all_actions 
+        return all_actions
+
+    def Iterive(self, node, goal, actionsFunc, resultFunc):
+        limit = 1 
+        for i in range(35):
+            s = self.depthLimited(limit, node, actionsFunc, resultFunc,goal)
+            limit+=1
+            if s:
+                break
+        if s == None:
+            print("NO RESULT FOUND")
+        return s
+
+    def depthLimited(self, limit, node, actionsFunc, resultFunc, goal):
+        Q = LifoQueue()
+        # node.calculateF(node._state,goal) #just to be safe
+        Q.put(node)
+        while not Q.empty():
+            s = Q.get()
+            if s.pathGoal(goal):
+                return s 
+            elif s.getDepth() < limit:
+                for a in actionsFunc(s,goal):
+                    S = resultFunc(s,a,goal)
+                    Q.put(S)
 
