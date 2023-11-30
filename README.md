@@ -86,13 +86,15 @@ While not at the GOAL_STATE:
 Heristic = 0 
 
 | agent     | adverage_score | time   |
-|:-----:    | -------------- | ______ |
+|:-----:    | -------------- | ------ |
 | Astar     | $43            | 0.010  |
+
 
 Heristic = Manhattin
 
+
 | agent     | adverage_score | time   |
-|:-----:    | -------------- | ______ |
+|:-----:    | -------------- | ------ |
 | Random    | NO solution    |   N/A  |
 | Astar     | $94            | 0.005  |
 | Iteritive | $84            | 0.015  |
