@@ -1,103 +1,89 @@
 ## PEAS ASSESSMENT
 
-> Performance: 
-    The performance measure of this project, would be cost effective. Finding the 
-    optimal path that has the least amount of cost is the goal. To be more specific
-    to get every item that is on the *shopping list* into the *bag* and return to
-    start positon with each step costing *gas* money.
+> **Performance:** 
+    The performance measure of this project is to be cost-effective. Finding the optimal path with the minimum cost is the goal. To be more specific, the objective is to get every item on the *shopping list* into the *bag* and return to the starting position, with each step incurring a cost in *gas* money.
+>
+> The performance measure goes as follows: each step is either the gas amount or the amount of an item at a store if the player is at a store.
 
-> Enviorment: 
-    The enviorment is a area rectangle *X width and Y height* also it has *N stores*
-    with range of *1 to 100 $* per each item they sale that is on your *shopping list*.
-    Each step cost is the *gas* price unless buying, which will be the cost of the item.
+> **Environment:** 
+    The environment is a rectangular area with a width of *X* and height of *Y*. It contains *N stores* offering items on your *shopping list*, each priced between *$1 to $100*. Each step's cost is the *gas* price, unless buying, in which case it's the cost of the item.
 
-The defaults is as follows:
-- width = 7
-- height = 5
-- stores = 4
-- gas = 1
-- shopping list = [ apples, oranges, bannanas ]
-- starting place will always be the same top left corner = 0
+    The defaults are as follows:
+    - width = 7
+    - height = 5
+    - stores = 4
+    - gas = 1
+    - shopping list = [Apples, Oranges, Bananas]
+    - the starting place is always the top left corner (0, 0).
 
-    **Observability** Fully observable. All information is given.
+    **Observability:** Fully observable. All information is given.
   
-    **Uncertanty** Deterministic, all things are given to you, though the stores go to random places each restart
+    **Uncertainty:** Deterministic; all relevant information is provided, although store locations change randomly with each restart.
   
-    **Duration** Sequential, best strategies come from optimal search algorythmns
+    **Duration:** Sequential; optimal search algorithms are best suited for the task.
   
-    **Stability** Static, nothing moves until finished.
+    **Stability:** Static; nothing moves until the task is finished.
   
-    **Grandularity** Discreet. All values are given.
+    **Granularity:** Discrete; all values are given.
   
-    **Particpants** Single agent will be the only player.
+    **Participants:** A single agent will be the only player.
   
-    **Knowledge** Known, all nessary physics are known.
-  
+    **Knowledge:** Known; all necessary physics are understood.
 
-> Actuators: 
-    The actuators are all about moving the player, and buying the items to put in
-    the bag.
+> **Actuators:** 
+    The actuators are responsible for moving the player and buying items to put in the bag.
 
-Actions go as follows:  
+Actions are as follows:  
 
-**movement actions**:  
+**Movement Actions:**  
     
 - up = 0
 - down = 1
 - left = 2
 - right = 3  
     
-**buy actions**:  
+**Buy Actions:**  
     
 - buy apple = 4
 - buy orange = 5
-- buy bannana = 6  
-    
+- buy banana = 6  
 
-> Sensors: 
-    The locations of each store, the positon of the player, 
-    bag / objects holding, shopping list / things needed, 
-    and the prices of each item at each store.
-
+> **Sensors:** 
+    The sensors provide information on store locations, player position, bag/objects held, shopping list/things needed, and the prices of each item at each store.
 
 ## Search Strategy
 
 ```
 While not at the GOAL_STATE:
-    Find the shortest path of each store:
+    Find the shortest path for each store:
         For each item in each store:
-            add path cost to each item
-            find cheapest item that you dont have
-    go to it and buy it
+            Add path cost to each item
+        Find the cheapest item that you don't have
+Go to it and buy it
 ```
 
-#### shortest path strategies
+#### Shortest Path Strategies
 
 - Random 
 
 - Astar
 
-- Iteritive Deepening
+- Iterative Deepening
 
 <!-- - BFS -->
 
 ## Statistical Results 
 
-Heristic = 0 
+Heuristic = 0 
 
-| agent     | adverage_score | time   |
-|:-----:    | -------------- | ------ |
+| Agent     | Average Score | Time   |
+|:-----:    | ------------- | ------ |
 | Astar     | $43            | 0.010  |
 
+Heuristic = Manhattan
 
-Heristic = Manhattin
-
-
-| agent     | adverage_score | time   |
-|:-----:    | -------------- | ------ |
-| Random    | NO solution    |   N/A  |
+| Agent     | Average Score | Time   |
+|:-----:    | ------------- | ------ |
+| Random    | NO solution    | N/A    |
 | Astar     | $94            | 0.005  |
-| Iteritive | $84            | 0.015  |
-
-
-
+| Iterative | $84            | 0.015  |
