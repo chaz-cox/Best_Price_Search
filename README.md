@@ -1,12 +1,14 @@
 ## PEAS ASSESSMENT
 
-> **Performance:** 
-    The performance measure of this project is to be cost-effective. Finding the optimal path with the minimum cost is the goal. To be more specific, the objective is to get every item on the *shopping list* into the *bag* and return to the starting position, with each step incurring a cost in *gas* money.
+> **Performance:**
+> 
+>   The performance measure of this project is to be cost-effective. Finding the optimal path with the minimum cost is the goal. To be more specific, the objective is to get every item on the *shopping list* into the *bag* and return to the starting position, with each step incurring a cost in *gas* money.
 >
 > The performance measure goes as follows: each step is either the gas amount or the amount of an item at a store if the player is at a store.
 
-> **Environment:** 
-    The environment is a rectangular area with a width of *X* and height of *Y*. It contains *N stores* offering items on your *shopping list*, each priced between *$1 to $100*. Each step's cost is the *gas* price, unless buying, in which case it's the cost of the item.
+> **Environment:**
+> 
+>    The environment is a rectangular area with a width of *X* and height of *Y*. It contains *N stores* offering items on your *shopping list*, each priced between *$1 to $100*. Each step's cost is the *gas* price, unless buying, in which case it's the cost of the item.
 
     The defaults are as follows:
     - width = 7
@@ -30,8 +32,9 @@
   
     **Knowledge:** Known; all necessary physics are understood.
 
-> **Actuators:** 
-    The actuators are responsible for moving the player and buying items to put in the bag.
+> **Actuators:**
+> 
+>  The actuators are responsible for moving the player and buying items to put in the bag.
 
 Actions are as follows:  
 
@@ -48,29 +51,32 @@ Actions are as follows:
 - buy orange = 5
 - buy banana = 6  
 
-> **Sensors:** 
-    The sensors provide information on store locations, player position, bag/objects held, shopping list/things needed, and the prices of each item at each store.
+> **Sensors:**
+> 
+>    The sensors provide information on store locations, player position, bag/objects held, shopping list/things needed, and the prices of each item at each store.
 
 ## Search Strategy
 
 ```
-While not at the GOAL_STATE:
+While not at the GOAL_STATE*:
     Find the shortest path for each store:
         For each item in each store:
             Add path cost to each item
         Find the cheapest item that you don't have
 Go to it and buy it
 ```
-
+*The goal state is to have every item on the shopping list in the bag, and to return to the starting position. 
 #### Shortest Path Strategies
 
-- Random 
+- **Random:**
+  - *Description:* A random strategy without a specific pathfinding approach.
 
-- Astar
+- **Astar:**
+  - *Description:* A* is an optimal and efficient pathfinding algorithm that prioritizes paths with lower estimated costs, guaranteeing completeness and optimality under suitable conditions.
 
-- Iterative Deepening
+- **Iterative Deepening:**
+  - *Description:* IDS is a memory-efficient and adaptable search algorithm that explores increasing depths, making it suitable for problems with unknown depths and offering a balance between memory efficiency and optimality.
 
-<!-- - BFS -->
 
 ## Statistical Results 
 
