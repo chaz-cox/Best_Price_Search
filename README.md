@@ -17,20 +17,20 @@
     - gas = 1
     - shopping list = [Apples, Oranges, Bananas]
     - the starting place is always the top left corner (0, 0).
-
-    **Observability:** Fully observable. All information is given.
+    
+**Observability:** Fully observable. All information is given.
   
-    **Uncertainty:** Deterministic; all relevant information is provided, although store locations change randomly with each restart.
+**Uncertainty:** Deterministic; all relevant information is provided, although store locations change randomly with each restart.
   
-    **Duration:** Sequential; optimal search algorithms are best suited for the task.
+**Duration:** Sequential; optimal search algorithms are best suited for the task.
   
-    **Stability:** Static; nothing moves until the task is finished.
+**Stability:** Static; nothing moves until the task is finished.
   
-    **Granularity:** Discrete; all values are given.
+**Granularity:** Discrete; all values are given.
   
-    **Participants:** A single agent will be the only player.
+**Participants:** A single agent will be the only player.
   
-    **Knowledge:** Known; all necessary physics are understood.
+**Knowledge:** Known; all necessary physics are understood.
 
 > **Actuators:**
 > 
