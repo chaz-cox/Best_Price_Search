@@ -93,3 +93,8 @@ Heuristic = Manhattan
 | Random    | NO solution    | N/A    |
 | Astar     | $94            | 0.005  |
 | Iterative | $84            | 0.015  |
+
+## Conclusion
+
+Given the satistical results, it is evident that the A* search is the best and fastest path strategy choice.
+
